@@ -81,6 +81,9 @@ object Server extends App with CorsSupport {
               val query = queryParam orElse root.query.string.getOption(body)
               val operationName = operationNameParam orElse root.operationName.string.getOption(body)
               val variablesStr = variablesParam orElse root.variables.string.getOption(body)
+              println(s"query :${query}")
+              println(s"operationName :${operationName}")
+              println(s"variablesStr :${variablesStr}")
 
               query.map(QueryParser.parse(_)) match {
                 case Some(Success(ast)) ⇒
