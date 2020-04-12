@@ -27,7 +27,11 @@ class CharacterRepo {
   import CharacterRepo._
 
   def getHero(episode: Option[Episode.Value]) =
-    episode flatMap (_ ⇒ getHuman("1000")) getOrElse droids.last
+    episode flatMap (e => e match {
+      case Episode.NEWHOPE => getHuman("1000")
+      case Episode.JEDI => getHuman("1002")
+      case Episode.EMPIRE => getHuman("1003")
+    }) getOrElse droids.last
 
   def getHuman(id: String): Option[Human] = humans.find(c ⇒ c.id == id)
 
