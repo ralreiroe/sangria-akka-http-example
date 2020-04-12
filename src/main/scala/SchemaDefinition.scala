@@ -4,8 +4,11 @@ import sangria.schema._
 import scala.concurrent.Future
 
 /**
- * Defines a GraphQL schema for the current project
- */
+  * Defines a GraphQL schema for the current project
+  * an enum
+  * a human and a droid type
+  * a query type
+  */
 object SchemaDefinition {
   /**
     * Resolves the lists of characters. These resolutions are batched and
@@ -36,7 +39,7 @@ object SchemaDefinition {
       () ⇒ fields[CharacterRepo, Character](
         Field("id", StringType,
           Some("The id of the character."),
-          resolve = _.value.id),
+          resolve = ctx => ctx.value.id),
         Field("name", OptionType(StringType),
           Some("The name of the character."),
           resolve = _.value.name),
@@ -53,7 +56,7 @@ object SchemaDefinition {
       "Human",
       "A humanoid creature in the Star Wars universe.",
       interfaces[CharacterRepo, Human](Character),
-      fields[CharacterRepo, Human](
+      fields[CharacterRepo, Human](         //Note how the schema is linked to case classes and Scala types
         Field("id", StringType,
           Some("The id of the human."),
           resolve = _.value.id),
@@ -105,7 +108,6 @@ object SchemaDefinition {
     "Query", fields[CharacterRepo, Unit](
       Field("hero", Character,
         arguments = EpisodeArg :: Nil,
-        deprecationReason = Some("Use `human` or `droid` fields instead"),
         resolve = (ctx) ⇒ ctx.ctx.getHero(ctx.arg(EpisodeArg))),
       Field("human", OptionType(Human),
         arguments = ID :: Nil,
@@ -120,6 +122,26 @@ object SchemaDefinition {
         arguments = LimitArg :: OffsetArg :: Nil,
         resolve = ctx ⇒ ctx.ctx.getDroids(ctx arg LimitArg, ctx arg OffsetArg))
     ))
+
+  /**
+    * example query:
+
+    <pre>query q2 {
+      hero(episode: JEDI) {
+        name
+      }
+     humans {
+      name
+      appearsIn
+     }
+     droids(limit: 2) {
+      name
+      friends {
+         name
+      }
+     }
+    }</pre>
+    */
 
   val StarWarsSchema = Schema(Query)
 }
