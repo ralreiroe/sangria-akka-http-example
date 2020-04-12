@@ -62,6 +62,7 @@ object Server extends App with CorsSupport {
         get {
           explicitlyAccepts(`text/html`) {
             getFromResource("assets/playground.html")
+            //from https://github.com/prisma-labs/graphql-playground/blob/master/packages/graphql-playground-html/withAnimation.html
           } ~
           parameters('query, 'operationName.?, 'variables.?) { (query, operationName, variables) ⇒
             QueryParser.parse(query) match {
