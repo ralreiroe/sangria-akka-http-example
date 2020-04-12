@@ -36,7 +36,7 @@ object SchemaDefinition {
     InterfaceType(
       "Character",
       "A character in the Star Wars Trilogy",
-      () ⇒ fields[CharacterRepo, Character](
+      () ⇒ fields[CharacterRepo, Character](    //binding resolve to Ctx[CharacterRepo, Character] => Action[CharacterRepo, Character]
         Field("id", StringType,
           Some("The id of the character."),
           resolve = ctx => ctx.value.id),
